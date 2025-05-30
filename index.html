@@ -46,6 +46,9 @@
       flex: 1 1 400px;
       max-width: 600px;
     }
+    .chart-container.pie {
+      max-width: 300px;
+    }
   </style>
 </head>
 <body>
@@ -55,7 +58,7 @@
     <div class="chart-container">
       <canvas id="barChart"></canvas>
     </div>
-    <div class="chart-container">
+    <div class="chart-container pie">
       <canvas id="pieChart"></canvas>
     </div>
   </div>
@@ -65,34 +68,20 @@
       <tr>
         <th>Department</th>
         <th>Personnel Salaries</th>
-        <th>Rental Fee</th>
-        <th>Car Rental</th>
-        <th>Service Fee</th>
-        <th>Cost of Services</th>
-        <th>Bill Costs</th>
-        <th>Profit/Item<br>(Shipping Incl.)</th>
-        <th>Priority</th>
         <th>Total</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>Broadcast</td><td>1000</td><td>-</td><td>-</td><td>-1000</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
-      <tr><td>Production</td><td>1000</td><td>-</td><td>-</td><td>-1000</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
-      <tr><td>Sales & Client Services</td><td>1000</td><td>-</td><td>-</td><td>-1000</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
-      <tr><td>Public Relations</td><td>1000</td><td>-</td><td>-</td><td>-1000</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
-      <tr><td>Finance & Accounting</td><td>1000</td><td>-</td><td>-</td><td>-1000</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
-      <tr><td>Television Commercial</td><td>1000</td><td>-</td><td>-</td><td>-1000</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
-      <tr><td>IT & Software</td><td>1000</td><td>-</td><td>-</td><td>-1000</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
-      <tr><td><strong>Total</strong></td><td>-</td><td>-</td><td>-</td><td>-7000</td><td>-</td><td>-</td><td>-</td><td>7</td><td>-7000</td></tr>
+<tr><td>Broadcast Department </td><td>3000.0</td><td>-3000</td></tr><tr><td>Production Department </td><td>2000.0</td><td>-2000</td></tr><tr><td>Sales & Client Services Department</td><td>1000.0</td><td>-1000</td></tr><tr><td>Public Relations Department</td><td>1000.0</td><td>-1000</td></tr><tr><td>Finance & Accounting Departm</td><td>1500.0</td><td>-1500</td></tr><tr><td>Television Commercial Department</td><td>1000.0</td><td>-1000</td></tr><tr><td>IT & Software Department</td><td>2000.0</td><td>-2000</td></tr><tr><td>Total</td><td>0.0</td><td>-11500</td></tr>
     </tbody>
   </table>
 
   <script>
-    const chartData = {"departments": ["Broadcast", "Production", "Sales & Client Services", "Public Relations", "Finance & Accounting", "Television Commercial", "IT & Software"], "salaries": [1000, 1000, 1000, 1000, 1000, 1000, 1000], "totals": [-1000, -1000, -1000, -1000, -1000, -1000, -1000]};
+    const chartData = {"departments": ["Broadcast Department ", "Production Department ", "Sales & Client Services Department", "Public Relations Department", "Finance & Accounting Departm", "Television Commercial Department", "IT & Software Department", "Total"], "salaries": [3000.0, 2000.0, 1000.0, 1000.0, 1500.0, 1000.0, 2000.0, 0.0], "totals": [-3000, -2000, -1000, -1000, -1500, -1000, -2000, -11500]};
     const pieColors = [
       '#FF6384', '#36A2EB', '#FFCE56',
       '#4BC0C0', '#9966FF', '#FF9F40',
-      '#00D084'
+      '#00D084', '#F67019', '#8884d8', '#00C49F'
     ];
 
     const barCtx = document.getElementById('barChart').getContext('2d');
@@ -103,7 +92,7 @@
         datasets: [{
           label: 'Personnel Salaries',
           data: chartData.salaries,
-          backgroundColor: pieColors,
+          backgroundColor: pieColors.slice(0, chartData.departments.length),
           borderColor: '#000',
           borderWidth: 1
         }]
@@ -126,7 +115,7 @@
         datasets: [{
           label: 'Total Cost Distribution',
           data: chartData.totals.map(x => Math.abs(x)),
-          backgroundColor: pieColors
+          backgroundColor: pieColors.slice(0, chartData.departments.length)
         }]
       },
       options: {
