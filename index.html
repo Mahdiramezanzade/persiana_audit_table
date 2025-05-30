@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Persiana Audit Program Monthly</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -17,11 +17,25 @@
       text-align: center;
       margin-bottom: 2rem;
     }
+    .charts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .chart-container {
+      background: #1c1c1c;
+      padding: 1rem;
+      border-radius: 10px;
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #1e1e1e;
       margin-top: 2rem;
+      background-color: #1e1e1e;
     }
     th, td {
       border: 1px solid #444;
@@ -35,37 +49,16 @@
     tr:nth-child(even) {
       background-color: #2a2a2a;
     }
-    .charts-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 3rem;
-      margin: 2rem auto;
-    }
-    .chart-container {
-      background-color: #1c1c1c;
-      padding: 1rem;
-      border-radius: 12px;
-      max-width: 600px;
-      flex: 1 1 400px;
-    }
-    .chart-title {
-      text-align: center;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
   </style>
 </head>
 <body>
   <h1>Persiana Audit Program Monthly</h1>
 
-  <div class="charts-wrapper">
+  <div class="charts">
     <div class="chart-container">
-      <div class="chart-title">Personnel Salaries per Department (Bar Chart)</div>
       <canvas id="barChart"></canvas>
     </div>
     <div class="chart-container" style="max-width: 300px;">
-      <div class="chart-title">Total Cost Distribution (Pie Chart)</div>
       <canvas id="pieChart"></canvas>
     </div>
   </div>
@@ -79,27 +72,42 @@
       </tr>
     </thead>
     <tbody>
-<tr><td>Broadcast Department </td><td>3000.0</td><td>-3000</td></tr><tr><td>Production Department </td><td>2000.0</td><td>-2000</td></tr><tr><td>Sales & Client Services Department</td><td>1000.0</td><td>-1000</td></tr><tr><td>Public Relations Department</td><td>1000.0</td><td>-1000</td></tr><tr><td>Finance & Accounting Departm</td><td>1500.0</td><td>-1500</td></tr><tr><td>Television Commercial Department</td><td>1000.0</td><td>-1000</td></tr><tr><td>IT & Software Department</td><td>2000.0</td><td>-2000</td></tr><tr><td>Total</td><td>0.0</td><td>-11500</td></tr>
+      <tr><td>Broadcast Department</td><td>3000</td><td>-3000</td></tr>
+      <tr><td>Production Department</td><td>2000</td><td>-2000</td></tr>
+      <tr><td>Sales & Client Services Department</td><td>1000</td><td>-1000</td></tr>
+      <tr><td>Public Relations Department</td><td>1000</td><td>-1000</td></tr>
+      <tr><td>Finance & Accounting Department</td><td>1500</td><td>-1500</td></tr>
+      <tr><td>Television Commercial Department</td><td>1000</td><td>-1000</td></tr>
+      <tr><td>IT & Software Department</td><td>2000</td><td>-2000</td></tr>
+      <tr><td><strong>Total</strong></td><td>0.0</td><td>-11500</td></tr>
     </tbody>
   </table>
 
   <script>
-    const chartData = {"departments": ["Broadcast Department ", "Production Department ", "Sales & Client Services Department", "Public Relations Department", "Finance & Accounting Departm", "Television Commercial Department", "IT & Software Department", "Total"], "salaries": [3000.0, 2000.0, 1000.0, 1000.0, 1500.0, 1000.0, 2000.0, 0.0], "totals": [-3000, -2000, -1000, -1000, -1500, -1000, -2000, -11500]};
+    const departments = [
+      "Broadcast Department",
+      "Production Department",
+      "Sales & Client Services Department",
+      "Public Relations Department",
+      "Finance & Accounting Department",
+      "Television Commercial Department",
+      "IT & Software Department"
+    ];
+    const salaries = [3000, 2000, 1000, 1000, 1500, 1000, 2000];
+    const totals = [-3000, -2000, -1000, -1000, -1500, -1000, -2000];
     const pieColors = [
       '#FF6384', '#36A2EB', '#FFCE56',
-      '#4BC0C0', '#9966FF', '#FF9F40',
-      '#00D084', '#F67019', '#8884d8', '#00C49F'
+      '#4BC0C0', '#9966FF', '#FF9F40', '#00D084'
     ];
 
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    new Chart(barCtx, {
+    new Chart(document.getElementById('barChart').getContext('2d'), {
       type: 'bar',
       data: {
-        labels: chartData.departments,
+        labels: departments,
         datasets: [{
           label: 'Personnel Salaries',
-          data: chartData.salaries,
-          backgroundColor: pieColors.slice(0, chartData.departments.length),
+          data: salaries,
+          backgroundColor: pieColors,
           borderColor: '#000',
           borderWidth: 1
         }]
@@ -110,20 +118,21 @@
           legend: { display: false }
         },
         scales: {
-          y: { beginAtZero: true }
+          y: {
+            beginAtZero: true
+          }
         }
       }
     });
 
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    new Chart(pieCtx, {
+    new Chart(document.getElementById('pieChart').getContext('2d'), {
       type: 'pie',
       data: {
-        labels: chartData.departments,
+        labels: departments,
         datasets: [{
           label: 'Total Cost Distribution',
-          data: chartData.totals.map(x => Math.abs(x)),
-          backgroundColor: pieColors.slice(0, chartData.departments.length)
+          data: totals.map(x => Math.abs(x)),
+          backgroundColor: pieColors
         }]
       },
       options: {
@@ -131,9 +140,7 @@
         plugins: {
           legend: {
             position: 'right',
-            labels: {{
-              color: '#fff'
-            }}
+            labels: { color: '#fff' }
           }
         }
       }
