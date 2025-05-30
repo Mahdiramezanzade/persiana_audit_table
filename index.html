@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Persiana Audit Program Dynamic</title>
+  <title>Persiana Audit Program Monthly</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
@@ -75,7 +75,8 @@
     const uploadInput = document.getElementById('upload');
     const pieColors = [
       '#FF6384', '#36A2EB', '#FFCE56',
-      '#4BC0C0', '#9966FF', '#FF9F40', '#00D084', '#F67019'
+      '#4BC0C0', '#9966FF', '#FF9F40',
+      '#00D084', '#F67019', '#8884d8', '#00C49F'
     ];
 
     uploadInput.addEventListener('change', (event) => {
@@ -99,30 +100,40 @@
     function renderTable(data) {
       const tableContainer = document.getElementById('tableContainer');
       let html = "<table><thead><tr>";
-      data[3].forEach(col => {
-        html += `<th>${col || ''}</th>`;
-      });
+      const headerRow = data.find(row => row.includes("Department"));
+      if (!headerRow) return;
+      headerRow.forEach(col => html += `<th>${col || ''}</th>`);
       html += "</tr></thead><tbody>";
-      for (let i = 4; i < data.length; i++) {
+
+      data.forEach((row, i) => {
+        if (i === 0 || row.length < 2 || row.every(cell => !cell)) return;
+        if (i <= data.indexOf(headerRow)) return;
         html += "<tr>";
-        data[i].forEach(cell => {
-          html += `<td>${cell !== undefined ? cell : '-'}</td>`;
-        });
+        row.forEach(cell => html += `<td>${cell !== undefined ? cell : '-'}</td>`);
         html += "</tr>";
-      }
+      });
+
       html += "</tbody></table>";
       tableContainer.innerHTML = html;
     }
 
     function renderCharts(data) {
+      const headerRowIndex = data.findIndex(row => row.includes("Department"));
       const labels = [], salaries = [], totals = [];
-      for (let i = 4; i < data.length - 1; i++) {
-        labels.push(data[i][1]);
-        salaries.push(data[i][2]);
-        totals.push(Math.abs(data[i][10]));
+
+      for (let i = headerRowIndex + 1; i < data.length; i++) {
+        const row = data[i];
+        const dept = row[1];
+        const salary = parseFloat(row[2]);
+        const total = parseFloat(row[10]);
+
+        if (dept && !isNaN(salary) && !isNaN(total)) {
+          labels.push(dept);
+          salaries.push(salary);
+          totals.push(Math.abs(total));
+        }
       }
 
-      // Clear previous charts if they exist
       if (window.barChart) window.barChart.destroy();
       if (window.pieChart) window.pieChart.destroy();
 
