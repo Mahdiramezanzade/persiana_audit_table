@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Persiana Audit Program Monthly</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       background-color: #121212;
@@ -19,6 +21,7 @@
       width: 100%;
       border-collapse: collapse;
       background-color: #1e1e1e;
+      margin-top: 2rem;
     }
     th, td {
       border: 1px solid #444;
@@ -32,10 +35,23 @@
     tr:nth-child(even) {
       background-color: #2a2a2a;
     }
+    .chart-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 2rem auto;
+    }
   </style>
 </head>
 <body>
   <h1>Persiana Audit Program Monthly</h1>
+
+  <div class="chart-container">
+    <canvas id="barChart"></canvas>
+  </div>
+  <div class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
+
   <table>
     <thead>
       <tr>
@@ -52,8 +68,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>Broadcast Department</td><td>1000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
-      <tr><td>Production Department</td><td>1000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
+      <tr><td>Broadcast</td><td>1000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
+      <tr><td>Production</td><td>1000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
       <tr><td>Sales & Client Services</td><td>1000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
       <tr><td>Public Relations</td><td>1000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
       <tr><td>Finance & Accounting</td><td>1000</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1000</td><td>1</td><td>-1000</td></tr>
@@ -62,5 +78,51 @@
       <tr><td><strong>Total</strong></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>7</td><td>-7000</td></tr>
     </tbody>
   </table>
+
+  <script>
+    const chartData = {"departments": ["Broadcast", "Production", "Sales & Client Services", "Public Relations", "Finance & Accounting", "Television Commercial", "IT & Software"], "salaries": [1000, 1000, 1000, 1000, 1000, 1000, 1000], "totals": [-1000, -1000, -1000, -1000, -1000, -1000, -1000]};
+
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: chartData.departments,
+        datasets: [{
+          label: 'Personnel Salaries',
+          data: chartData.salaries,
+          backgroundColor: 'rgba(255, 204, 0, 0.7)',
+          borderColor: 'rgba(255, 204, 0, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: chartData.departments,
+        datasets: [{
+          label: 'Total (abs)',
+          data: chartData.totals.map(x => Math.abs(x)),
+          backgroundColor: [
+            '#FF6384', '#36A2EB', '#FFCE56',
+            '#4BC0C0', '#9966FF', '#FF9F40', '#00D084'
+          ]
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  </script>
 </body>
 </html>
